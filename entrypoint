@@ -18,7 +18,7 @@ fi
 
 # Wait for pipework to create the bridge
 printf "Waiting for host to create eth1 interface bridge... "
-cp pipework /etc/dhcp
+cp pipework /var/lib/dhcp
 ./pipework --wait -i eth1
 echo "done."
 
