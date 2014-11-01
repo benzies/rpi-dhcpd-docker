@@ -1,4 +1,4 @@
-Raspberry Pi Tunnel Manager Docker
-==================================
+Raspberry Pi DHCP Daemon Docker
+===============================
 
-SSH tunnel manager docker image for the Raspberry Pi running ArchLinux with Docker daemon.
+ISC DHCP server docker image for the Raspberry Pi running ArchLinux with Docker daemon.
