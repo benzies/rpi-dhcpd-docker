@@ -19,10 +19,10 @@ RUN mv /etc/dhcp /etc/dhcp.orig
 RUN mv /var/lib/dhcp /var/lib/dhcp.orig
 
 # Define working directory.
-WORKDIR /opt/dhcp-server
+WORKDIR /opt/dhcpd
 
 # Add files to the container.
-ADD . /opt/dhcp-server
+ADD . /opt/dhcpd
 RUN wget --no-check-certificate https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework
 RUN chmod +x pipework
 
