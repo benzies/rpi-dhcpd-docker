@@ -29,6 +29,9 @@ RUN chmod +x pipework
 # Define volumes.
 VOLUME ["/etc/dhcp", "/var/lib/dhcp"]
 
+# Copy the pipework script for use by the host
+RUN cp pipework /etc/dhcp
+
 # Expose ports.
 EXPOSE 67/udp
 
