@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+# Copy a default configuration into place if one not there
+if [ ! -f /etc/dhcp/dhcpd.conf ]; then
+    IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+    PAIR=$(netmask -s $IP | awk '{print $1}')
+    NETWORK=$(echo $PAIR | cut -d/ -f1)
+    NETMASK=$(echo $PAIR | cut -d/ -f2)
+    cp /etc/dhcp.orig/dhcpd.conf /etc/dhcp/dhcpd.conf
+    echo "subnet $NETWORK netmask $NETMASK { }" >> /etc/dhcp/dhcpd.conf
+fi
+
+# Create an empty leases file in place if one is not there
+if [ ! -f /var/lib/dhcp/dhcpd.leases ]; then
+    touch /var/lib/dhcp/dhcpd.leases
+fi
+
+# Wait for pipework to create the bridge
+printf "Waiting for host to create eth1 interface bridge... "
+./pipework --wait -i eth1
+echo "done."
+
+exec /usr/sbin/dhcpd $@
