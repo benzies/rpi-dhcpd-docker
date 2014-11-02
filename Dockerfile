@@ -8,8 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install packages.
 RUN apt-get update
 RUN apt-get -y upgrade
-#RUN apt-get -y dist-upgrade
-RUN apt-get install -y netmask isc-dhcp-server wget
+RUN apt-get install -y curl dnsutils iproute nano netmask isc-dhcp-server wget
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
