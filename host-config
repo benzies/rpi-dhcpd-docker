@@ -1,0 +1,32 @@
+#!/bin/sh
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+# Exit with error if required environment is not present
+if [ -z "${CONTAINER_ID}" ]; then
+  echo "Envrionment variable CONTAINER_ID must be provided"
+  exit 1
+fi
+if [ -z "${HOST_IP_SUBNET}" ]; then
+  echo "Envrionment variable HOST_IP_SUBNET must be provided"
+  exit 1
+fi
+if [ -z "${HOST_BRIDGE_IP_SUBNET}" ]; then
+  echo "Envrionment variable HOST_BRIDGE_IP_SUBNET must be provided"
+  exit 1
+fi
+if [ -z "${GATEWAY_IP_ADDRESS}" ]; then
+  echo "Envrionment variable GATEWAY_IP_ADDRESS must be provided"
+  exit 1
+fi
+
+# Create a virtual ethernet interface
+/bin/ip addr del ${HOST_IP_SUBNET} dev eth0
+/bin/ip link add link eth0 dev eth0m type macvlan mode bridge
+/bin/ip link set eth0m up
+/bin/ip addr add ${HOST_IP_SUBNET} dev eth0m
+/bin/route add default gw ${GATEWAY_IP_ADDRESS}
+
+# Attach teh virtual interface to the container
+${SCRIPT_DIR}/pipework eth0 -i eth1 ${CONTAINER_ID} ${HOST_BRIDGE_IP_SUBNET}"
