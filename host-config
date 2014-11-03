@@ -21,6 +21,16 @@ if [ -z "${GATEWAY_IP_ADDRESS}" ]; then
   exit 1
 fi
 
+# Reset the interfaces if we are running again
+function ignore {}
+trap ignore EXIT
+/bin/route del default gw ${GATEWAY_IP_ADDRESS}
+/bin/ip addr del ${HOST_IP_SUBNET} dev eth0m
+/bin/ip addr add ${HOST_IP_SUBNET} dev eth0
+/bin/ip link set eth0m down
+/bin/ip link del link eth0 dev eth0m type macvlan mode bridge
+trap - EXIT
+
 # Create a virtual ethernet interface
 /bin/ip addr del ${HOST_IP_SUBNET} dev eth0
 /bin/ip link add link eth0 dev eth0m type macvlan mode bridge
@@ -29,4 +39,4 @@ fi
 /bin/route add default gw ${GATEWAY_IP_ADDRESS}
 
 # Attach teh virtual interface to the container
-${SCRIPT_DIR}/pipework eth0 -i eth1 ${CONTAINER_ID} ${HOST_BRIDGE_IP_SUBNET}"
+${SCRIPT_DIR}/pipework eth0 -i eth1 ${CONTAINER_ID} ${HOST_BRIDGE_IP_SUBNET}
