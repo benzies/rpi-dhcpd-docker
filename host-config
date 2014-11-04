@@ -4,7 +4,7 @@ set -e
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 CONTAINER_NAME=${CONTAINER_NAME:-$1}
 LAN_INTERFACE=eth0
-VLAN_INTERFACE=eth0m
+VLAN_INTERFACE=eth0dhcpd
 CONTAINER_INTERFACE=eth1
 
 # Exit with error if required environment is not present
