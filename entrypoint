@@ -16,11 +16,15 @@ if [ ! -f /var/lib/dhcp/dhcpd.leases ]; then
     touch /var/lib/dhcp/dhcpd.leases
 fi
 
-# Wait for pipework to create the bridge
-printf "Waiting for host to create eth1 interface bridge... "
+# Attempt to deploy pipework helper scripts
 cp -u ./host-config /etc/dhcp || true
 cp -u ./pipework /etc/dhcp || true
-./pipework --wait -i eth1
-echo "done."
 
-exec /usr/sbin/dhcpd $@
+# Wait for pipework to create the bridge
+if [ "PIPEWORK_WAIT" == "true" ]; then
+  printf "Waiting for host to create eth1 interface bridge... "
+  ./pipework --wait -i eth1
+  echo "done."
+fi
+
+exec "$@"
