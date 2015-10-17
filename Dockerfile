@@ -1,24 +1,19 @@
-FROM resin/rpi-raspbian:latest
+FROM hypriot/rpi-alpine-scratch:latest
 
 MAINTAINER marc.lennox@gmail.com
 
-# Set environment.
-ENV DEBIAN_FRONTEND noninteractive
+# Set environment variables.
+ENV \
+  TERM=xterm-color
 
 # Install packages.
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN apt-get install -y curl dnsutils iproute nano netmask isc-dhcp-server wget
+RUN apk update && \
+    apk upgrade && \
+    apk add bash dhcp nano wget && \
+    rm -rf /var/cache/apk/*
 
-# Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Move the existing configuration and data directories out of the way
-RUN mv /etc/dhcp /etc/dhcp.orig
-RUN mv /var/lib/dhcp /var/lib/dhcp.orig
-
-# Define working directory.
-WORKDIR /opt/dhcpd
+# Add files to the container.
+COPY entrypoint.sh /docker-entrypoint
 
 # Define volumes.
 VOLUME ["/etc/dhcp", "/var/lib/dhcp"]
@@ -27,7 +22,7 @@ VOLUME ["/etc/dhcp", "/var/lib/dhcp"]
 EXPOSE 67/udp
 
 # Define entrypoint.
-ENTRYPOINT ["./entrypoint"]
+ENTRYPOINT ["/docker-entrypoint"]
 
 # Define command
 CMD ["/usr/sbin/dhcpd", "-d", "-f", "-cf", "/etc/dhcp/dhcpd.conf", "-lf", "/var/lib/dhcp/dhcpd.leases", "--no-pid"]
