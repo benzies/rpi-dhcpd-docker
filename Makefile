@@ -8,3 +8,7 @@ clean_build: Dockerfile
 
 push: build
 	docker push ${DOCKER_IMAGE_NAME}
+
+run: build
+	docker run -it --rm ${DOCKER_IMAGE_NAME} ${ARGS}
+
