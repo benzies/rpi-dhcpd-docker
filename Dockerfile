@@ -1,6 +1,6 @@
 FROM hypriot/rpi-alpine-scratch:latest
 
-MAINTAINER marc.lennox@gmail.com
+MAINTAINER Marc Lennox <marc.lennox@gmail.com>
 
 # Set environment variables.
 ENV \
