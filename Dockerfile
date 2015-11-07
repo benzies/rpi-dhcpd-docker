@@ -7,9 +7,7 @@ ENV \
   TERM=xterm-color
 
 # Install packages.
-RUN apk update && \
-    apk upgrade && \
-    apk add bash dhcp nano wget && \
+RUN apk --update add bash dhcp nano wget && \
     rm -rf /var/cache/apk/*
 
 # Add files to the container.
